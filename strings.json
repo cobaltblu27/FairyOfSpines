@@ -1,9 +1,22 @@
 {
   "en": {
     "help": "manual message goes here.",
-    "todo": "Sure...write some more code then I can do that!"
+    "todo": "Sure...write some more code then I can do that!",
+    "message": "this will come up every hour.",
+    "already_on": "Fairy of Spine is already with you.",
+    "not_running": "Fairy of Spine is not running.",
+    "startup": "Fairy of Spine will now watch your back(literally).",
+    "turning_off": "Bye!"
   },
-  "kr": {},
+  "kr": {
+    "help": "manual message goes here.",
+    "todo": "Sure...write some more code then I can do that!",
+    "message": "this will come up every hour.",
+    "already_on": "Fairy of Spine is already with you.",
+    "not_running": "Fairy of Spine is not running.",
+    "startup": "Fairy of Spine will now watch your back(literally).",
+    "turning_off": "Bye!"
+  },
   "commands": {
     "start": "start",
     "stop": "stop",
