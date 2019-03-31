@@ -1,0 +1,12 @@
+{
+  "en": {
+    "help": "manual message goes here.",
+    "todo": "Sure...write some more code then I can do that!"
+  },
+  "kr": {},
+  "commands": {
+    "start": "start",
+    "stop": "stop",
+    "auto": "auto"
+  }
+}

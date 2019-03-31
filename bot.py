@@ -1,13 +1,24 @@
 import os
 import time
 import re
+import json
 from slackclient import SlackClient
 
 RTM_READ_DELAY= 1
-EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
+COMMANDS = {}
+messages = {}
+slack_client = None
 
-slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+with open('token.txt') as token:
+    slack_client = SlackClient(token.read().split('\n')[0])
+
+
+with open('strings.json') as json_file:
+    json_obj = json.load(json_file)
+    COMMANDS = json_obj["commands"]
+    messages = json_obj["en"]
+
 bot_id = None
 
 def parse_bot_commands(slack_events):
@@ -27,18 +38,19 @@ def parse_direct_mention(message_text):
 
 def handle_command(command, channel):
     # Default response is help text for the user
-    default_response = "Not sure what you mean. Try *{}*.".format(EXAMPLE_COMMAND)
+    default_response = messages["help"]
     # Finds and executes the given command, filling in response
     response = None
     # This is where you start to implement more commands!
-    if command.startswith(EXAMPLE_COMMAND):
-        response = "Sure...write some more code then I can do that!"
-        # Sends the response back to the channel
-        slack_client.api_call(
-            "chat.postMessage",
-            channel=channel,
-            text=response or default_response
-        )
+    if command.startswith(COMMANDS["start"]):
+        response = messages["todo"]
+    
+    # Sends the response back to the channel
+    slack_client.api_call(
+        "chat.postMessage",
+        channel=channel,
+        text=response or default_response
+    )
 
 
 
@@ -49,6 +61,7 @@ if __name__ == "__main__":
         while True:
             command, channel = parse_bot_commands(slack_client.rtm_read())
             if command:
+                print("from: {}\nmessage: {}".format(channel, command))
                 handle_command(command, channel)
             time.sleep(RTM_READ_DELAY)
 
