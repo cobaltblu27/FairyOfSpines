@@ -1,21 +1,39 @@
 {
   "en": {
-    "help": "manual message goes here.",
+    "help": "start : starts FOS\\nstop  : stops FOS\\nauto TIME_START TIME_END :\\n  automatically start FOS in TIME_START and stop in TIME_END",
     "todo": "Sure...write some more code then I can do that!",
     "message": "this will come up every hour.",
     "already_on": "Fairy of Spine is already with you.",
     "not_running": "Fairy of Spine is not running.",
     "startup": "Fairy of Spine will now watch your back(literally).",
-    "turning_off": "Bye!"
+    "turning_off": "Bye!",
+    "stop_first": "Fairy already working.\\nStop FOS before running automatic mode.",
+    "startup_auto": "Automatic mode on.",
+    "stretch": [
+      "It seems like you've been sitting there for a while!\\nIt's stretching time!!",
+      "STOP 5",
+      "Stretch your necks for 30 seconds!",
+      "STOP 3",
+      "COUNT 30",
+      "Stretch your shoulders for a minute!",
+      "STOP 3",
+      "COUNT 60",
+      "Stretch your back for a minute!",
+      "STOP 3",
+      "COUNT 60"
+    ]
   },
   "kr": {
-    "help": "manual message goes here.",
+    "help": "start : starts FOS\\nstop  : stops FOS\\nauto TIME_START TIME_END :\\n  automatically start FOS in TIME_START and stop in TIME_END",
     "todo": "Sure...write some more code then I can do that!",
     "message": "this will come up every hour.",
     "already_on": "Fairy of Spine is already with you.",
     "not_running": "Fairy of Spine is not running.",
     "startup": "Fairy of Spine will now watch your back(literally).",
-    "turning_off": "Bye!"
+    "turning_off": "Bye!",
+    "stop_first": "Fairy already working.\\nStop FOS before running automatic mode.",
+    "startup_auto": "Automatic mode on.",
+    "stretch": [""]
   },
   "commands": {
     "start": "start",

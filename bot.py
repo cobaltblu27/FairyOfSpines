@@ -4,8 +4,9 @@ import re
 import json
 from threading import Timer
 from slackclient import SlackClient
+from datetime import datetime, timedelta
 
-RTM_READ_DELAY= 1
+RTM_READ_DELAY = 0.1
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 COMMANDS = {}
 MESSAGES = {}
@@ -20,7 +21,7 @@ with open('strings.json') as json_file:
 class FairyOfSpine:
     slack_client = None
     bot_id = None
-    active_channels = set()
+    time_dict = {}
 
     def __init__(self):
         with open('token.txt') as token:
@@ -32,49 +33,98 @@ class FairyOfSpine:
                 user_id, message = self.parse_direct_mention(event["text"])
                 if user_id == self.bot_id:
                     return message, event["channel"]
-        return None, None   
+        return None, None
 
     def parse_direct_mention(self, message_text):
         matches = re.search(MENTION_REGEX, message_text)
         return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
 
     def send_message(self, channel, message):
-        self.slack_client.api_call(
-            "chat.postMessage",
-            channel=channel,
-            text=message
-        )
+        message_list = message.split("\\n")
+        for message in message_list:
+            self.slack_client.api_call(
+                "chat.postMessage",
+                channel=channel,
+                text=message
+            )
+
+    def parse_time(self, command):
+        #TODO: implement
+        return {
+            "next": None,
+            "start_time": None,
+            "end_time": None
+        }
+
+    def hour_later(self, time=datetime.now()):
+        return time + timedelta(hours=1)
 
     def handle_command(self, command, channel):
         # Default response is help text for the user
         default_response = MESSAGES["help"]
-        # Finds and executes the given command, filling in response
-        response = None
-        # This is where you start to implement more commands!
+
         if command.startswith(COMMANDS["start"]):
-            if channel in self.active_channels:
+            if channel in self.time_dict:
                 self.send_message(channel, MESSAGES["already_on"])
             else:
                 self.send_message(channel, MESSAGES["startup"])
-                self.active_channels.add(channel)
+                self.time_dict[channel] = {
+                    "next": self.hour_later(),
+                    "end_time": None
+                }
 
         elif command.startswith(COMMANDS["stop"]):
-            if channel not in self.active_channels:
+            if channel not in self.time_dict:
                 self.send_message(channel, MESSAGES["not_running"])
             else:
                 self.send_message(channel, MESSAGES["turning_off"])
-                self.active_channels.discard(channel)
+                self.time_dict.pop(channel)
 
-        elif command.startwith(COMMANDS["auto"]):
-            pass
-    
+        elif command.startswith(COMMANDS["auto"]):
+            if channel in self.time_dict:
+                self.send_message(channel, MESSAGES["stop_first"])
+            else:
+                self.send_message(channel, MESSAGES["startup_auto"])
+                self.time_dict[channel] = self.parse_time(command)
+
         # Sends the response back to the channel
         else:
-            self.send_message(channel, response or default_response)
-    
+            self.send_message(channel, default_response)
+
+    def _timeMessageThreadFunction(self, channel):
+        for i in range(len(MESSAGES["stretch"])):
+            if channel in self.time_dict:
+                if MESSAGES["stretch"][i].startswith("COUNT"):
+                    count = int(MESSAGES["stretch"][i].split()[1])
+                    for i in range(1, count + 1):
+                        self.send_message(channel, str(i))
+                        time.sleep(1)
+                elif MESSAGES["stretch"][i].startswith("STOP"):
+                    sleep_time = int(MESSAGES["stretch"][i].split()[1])
+                    time.sleep(sleep_time)
+                else:
+                    self.send_message(channel, MESSAGES["stretch"][i])
+                    time.sleep(1)
+
+    def timeMessage(self, channel):
+        t = Timer(0, lambda: self._timeMessageThreadFunction(channel))
+        t.start()
+
     def checkTime(self):
-        pass
-    
+        now = datetime.now()
+        for key, val in self.time_dict.items():
+            if val["end_time"] != None:
+                if val["next"] < now:
+                    next_time = self.hour_later()
+                    if next_time > val["end_time"]:
+                        next_time = self.hour_later(val["start_time"])
+                    val["next"] = next_time
+                    self.timeMessage(key)
+
+            elif val["next"] < now:
+                val["next"] = self.hour_later()
+                self.timeMessage(key)
+
     def run(self):
         if self.slack_client.rtm_connect(with_team_state=False):
             print("Bot running!")
@@ -87,7 +137,7 @@ class FairyOfSpine:
                     print("from: {}\nmessage: {}".format(channel, command))
                     self.handle_command(command, channel)
                 self.checkTime()
-                time.sleep(RTM_READ_DELAY)
+                # time.sleep(RTM_READ_DELAY)
         else:
             print("Connection failed")
 
@@ -95,6 +145,3 @@ class FairyOfSpine:
 if __name__ == "__main__":
     fs = FairyOfSpine()
     fs.run()
-
-
-
