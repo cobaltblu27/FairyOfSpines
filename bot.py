@@ -42,11 +42,23 @@ class FairyOfSpine:
     def send_message(self, channel, message):
         message_list = message.split("\\n")
         for message in message_list:
-            self.slack_client.api_call(
+            response = self.slack_client.api_call(
                 "chat.postMessage",
                 channel=channel,
                 text=message
             )
+        return response
+                
+    def update_message(self, channel, message, ts):
+        message_list = message.split("\\n")
+        for message in message_list:
+            response = self.slack_client.api_call(
+                "chat.update",
+                channel=channel,
+                text=message,
+                ts=ts
+            )
+        return response
 
     def parse_time(self, command):
         #TODO: implement
@@ -96,8 +108,9 @@ class FairyOfSpine:
             if channel in self.time_dict:
                 if MESSAGES["stretch"][i].startswith("COUNT"):
                     count = int(MESSAGES["stretch"][i].split()[1])
-                    for i in range(1, count + 1):
-                        self.send_message(channel, str(i))
+                    res = self.send_message(channel, "1")
+                    for i in range(2, count + 1):
+                        res = self.update_message(channel, str(i), res["ts"])
                         time.sleep(1)
                 elif MESSAGES["stretch"][i].startswith("STOP"):
                     sleep_time = int(MESSAGES["stretch"][i].split()[1])
