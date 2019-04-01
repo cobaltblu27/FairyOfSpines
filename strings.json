@@ -2,7 +2,6 @@
   "en": {
     "help": "start : starts FOS\\nstop  : stops FOS\\nauto TIME_START TIME_END :\\n  automatically start FOS in TIME_START and stop in TIME_END",
     "todo": "Sure...write some more code then I can do that!",
-    "message": "this will come up every hour.",
     "already_on": "Fairy of Spine is already with you.",
     "not_running": "Fairy of Spine is not running.",
     "startup": "Fairy of Spine will now watch your back(literally).",
@@ -11,7 +10,7 @@
     "startup_auto": "Automatic mode on.",
     "stretch": [
       "It seems like you've been sitting there for a while!\\nIt's stretching time!!",
-      "STOP 5",
+      "STOP 3",
       "Stretch your necks for 30 seconds!",
       "STOP 3",
       "COUNT 30",
@@ -20,20 +19,33 @@
       "COUNT 60",
       "Stretch your back for a minute!",
       "STOP 3",
-      "COUNT 60"
+      "COUNT 30",
+      "Nice!"
     ]
   },
   "kr": {
-    "help": "start : starts FOS\\nstop  : stops FOS\\nauto TIME_START TIME_END :\\n  automatically start FOS in TIME_START and stop in TIME_END",
+    "help": "안녕! 난 척추의 요정! 개발도 좋지만 스트래칭도 해가면서 하자!\\nstart : 스트레칭 알람을 킵니다. 한시간마다 스트레칭 안내가 나옵니다.\\nstop  : 스트레칭 알람을 끕니다.\\nauto TIME_START TIME_END :\\n  정해진 시간 사이에 한시간마다 스트레칭 알람을 해줍니다.",
     "todo": "Sure...write some more code then I can do that!",
-    "message": "this will come up every hour.",
-    "already_on": "Fairy of Spine is already with you.",
-    "not_running": "Fairy of Spine is not running.",
-    "startup": "Fairy of Spine will now watch your back(literally).",
-    "turning_off": "Bye!",
-    "stop_first": "Fairy already working.\\nStop FOS before running automatic mode.",
-    "startup_auto": "Automatic mode on.",
-    "stretch": [""]
+    "already_on": "척추의 요정이 이미 일하고 있습니다.",
+    "not_running": "척추의 요정은 이미 쉬고 있습니다.",
+    "startup": "척추의 요정이 당신의 뒤를 봐줄것입니다!",
+    "turning_off": "내일 봐요!",
+    "stop_first": "척추의 요정이 이미 일하고 있습니다.\\n자동시작을 키기 전 요정을 꺼주세요.",
+    "startup_auto": "자동시작이 켜졌습니다.",
+    "stretch": [
+      "안녕! 난 척추의 요정!\\n오래 앉아 있었다면 스트래칭을 하도록 하자!",
+      "STOP 3",
+      "목을 30초간 스트래칭하자!\\n 앞뒤로 15초간 두세트!",
+      "STOP 3",
+      "COUNT 30",
+      "1분간 어깨 스트래칭을 하자!",
+      "STOP 3",
+      "COUNT 60",
+      "등과 허리 스트레칭을 30초동안 하자!",
+      "STOP 3",
+      "COUNT 30",
+      "수고했어!"
+    ]
   },
   "commands": {
     "start": "start",
