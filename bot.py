@@ -10,20 +10,31 @@ RTM_READ_DELAY = 0.1
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 COMMANDS = {}
 MESSAGES = {}
+CONFIGS = {}
+
+with open('config.yml') as config_file:
+    lines = [x.strip() for x in config_file.readlines()]
+    for line in lines:
+        key_val = line.split(": ")
+        CONFIGS[key_val[0]] = key_val[1]
 
 
 with open('strings.json') as json_file:
     json_obj = json.load(json_file)
     COMMANDS = json_obj["commands"]
-    MESSAGES = json_obj["en"]
+    MESSAGES = json_obj[CONFIGS["Language"]]
 
 
 class FairyOfSpine:
     slack_client = None
     bot_id = None
     time_dict = {}
+    language = ""
+    alarm_minutes = 60
 
-    def __init__(self):
+    def __init__(self, configs):
+        self.language = configs["Language"]
+        self.alarm_minutes = configs["AlarmMinutes"]
         with open('token.txt') as token:
             self.slack_client = SlackClient(token.read().split('\n')[0])
 
@@ -156,5 +167,5 @@ class FairyOfSpine:
 
 
 if __name__ == "__main__":
-    fs = FairyOfSpine()
+    fs = FairyOfSpine(CONFIGS)
     fs.run()
