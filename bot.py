@@ -34,7 +34,7 @@ class FairyOfSpine:
 
     def __init__(self, configs):
         self.language = configs["Language"]
-        self.alarm_minutes = configs["AlarmMinutes"]
+        self.alarm_minutes = int(configs["AlarmMinutes"])
         with open('token.txt') as token:
             self.slack_client = SlackClient(token.read().split('\n')[0])
 
@@ -79,8 +79,8 @@ class FairyOfSpine:
             "end_time": None
         }
 
-    def hour_later(self, time=datetime.now()):
-        return time + timedelta(hours=1)
+    def get_next_time(self, time=datetime.now()):
+        return time + timedelta(minutes=self.alarm_minutes)
 
     def handle_command(self, command, channel):
         # Default response is help text for the user
@@ -92,7 +92,7 @@ class FairyOfSpine:
             else:
                 self.send_message(channel, MESSAGES["startup"])
                 self.time_dict[channel] = {
-                    "next": self.hour_later(),
+                    "next": self.get_next_time(),
                     "end_time": None
                 }
 
@@ -139,14 +139,14 @@ class FairyOfSpine:
         for key, val in self.time_dict.items():
             if val["end_time"] != None:
                 if val["next"] < now:
-                    next_time = self.hour_later()
+                    next_time = self.get_next_time()
                     if next_time > val["end_time"]:
-                        next_time = self.hour_later(val["start_time"])
+                        next_time = self.get_next_time(val["start_time"])
                     val["next"] = next_time
                     self.timeMessage(key)
 
             elif val["next"] < now:
-                val["next"] = self.hour_later()
+                val["next"] = self.get_next_time()
                 self.timeMessage(key)
 
     def run(self):
