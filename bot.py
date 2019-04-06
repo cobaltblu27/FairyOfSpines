@@ -139,14 +139,14 @@ class FairyOfSpine:
         for key, val in self.time_dict.items():
             if val["end_time"] != None:
                 if val["next"] < now:
-                    next_time = self.get_next_time()
+                    next_time = self.get_next_time(val["next"])
                     if next_time > val["end_time"]:
                         next_time = self.get_next_time(val["start_time"])
-                    val["next"] = next_time
+                    self.time_dice[key]["next"] = next_time    
                     self.timeMessage(key)
 
             elif val["next"] < now:
-                val["next"] = self.get_next_time()
+                self.time_dict[key]["next"] = self.get_next_time(val["next"])
                 self.timeMessage(key)
 
     def run(self):
@@ -158,10 +158,9 @@ class FairyOfSpine:
                     self.slack_client.rtm_read()
                 )
                 if command:
-                    print("from: {}\nmessage: {}".format(channel, command))
                     self.handle_command(command, channel)
                 self.checkTime()
-                # time.sleep(RTM_READ_DELAY)
+                time.sleep(RTM_READ_DELAY)
         else:
             print("Connection failed")
 
